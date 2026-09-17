@@ -14,7 +14,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  UV_VERSION: 0.11.19
   PYTHON_VERSION: 3.13.5
   OMP_NUM_THREADS: 1
   OPENBLAS_NUM_THREADS: 1
@@ -30,20 +29,13 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+      - name: Install uv and just
+        uses: Skrates/agent-affordances/toolchain@5613475f9d2d50d23b97e32669858f7f24a727d1
         with:
-          version: ${{ env.UV_VERSION }}
-          enable-cache: true
-          cache-dependency-glob: uv.lock
+          tools: uv just
 
       - name: Install Python
         run: uv python install "${PYTHON_VERSION}"
-
-      - name: Install just
-        uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3
-        with:
-          just-version: 1.42.4
 
       - name: Synchronize locked dependencies
         run: uv sync --frozen
@@ -83,11 +75,9 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install uv
-        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+        uses: Skrates/agent-affordances/toolchain@5613475f9d2d50d23b97e32669858f7f24a727d1
         with:
-          version: ${{ env.UV_VERSION }}
-          enable-cache: true
-          cache-dependency-glob: uv.lock
+          tools: uv
 
       - name: Install Python
         run: uv python install "${PYTHON_VERSION}"
@@ -109,9 +99,9 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install just
-        uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b # v3
+        uses: Skrates/agent-affordances/toolchain@5613475f9d2d50d23b97e32669858f7f24a727d1
         with:
-          just-version: 1.42.4
+          tools: just
 
       - name: Build production image
         run: docker build --tag memory-palace:ci .
